@@ -24,6 +24,27 @@ window.addEventListener("load", () => {
     let selectedCard = null;
     let selectedTimeBtn = null;
 
+    function toMinutes(timeString) {
+        const [hoursString, minutesString] = timeString.split(":");
+        return Number(hoursString) * 60 + Number(minutesString);
+    }
+
+    function to12HourString(totalMinutes) {
+        const minutesInDay = 24 * 60;
+        const wrappedMinutes = ((totalMinutes % minutesInDay) + minutesInDay) % minutesInDay;
+        const hours24 = Math.floor(wrappedMinutes / 60);
+        const minutes = wrappedMinutes % 60;
+        const period = hours24 >= 12 ? "PM" : "AM";
+        const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+        return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
+    }
+
+    function formatShowtimeRange(startTimeString, movieLengthMinutes) {
+        const startMinutes = toMinutes(startTimeString);
+        const endMinutes = startMinutes + movieLengthMinutes;
+        return `${to12HourString(startMinutes)} - ${to12HourString(endMinutes)}`;
+    }
+
     // For each movie in the list, we create one card per movie and the show times that are available for that movie
     let firstCard = null;
     for (let i = 0; i < movies.length; i++) {
@@ -40,7 +61,7 @@ window.addEventListener("load", () => {
             const timeButton = document.createElement("button");
 
             timeButton.type = "button";
-            timeButton.innerText = timeString;
+            timeButton.innerText = formatShowtimeRange(timeString, movie.movieLength);
             timeButton.addEventListener("click", (clickEvent) => {
                 clickEvent.stopPropagation();
                 selectMovie(movie, card);
