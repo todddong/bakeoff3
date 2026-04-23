@@ -24,11 +24,13 @@ window.addEventListener("load", () => {
     let selectedCard = null;
     let selectedTimeBtn = null;
 
+    // Changed showtime math to convert framework start times into start/end labels.
     function toMinutes(timeString) {
         const [hoursString, minutesString] = timeString.split(":");
         return Number(hoursString) * 60 + Number(minutesString);
     }
 
+    // Changed display format to 12 hour AM/PM 
     function to12HourString(totalMinutes) {
         const minutesInDay = 24 * 60;
         const wrappedMinutes = ((totalMinutes % minutesInDay) + minutesInDay) % minutesInDay;
@@ -39,6 +41,7 @@ window.addEventListener("load", () => {
         return `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
     }
 
+    // Changed labels to start end format
     function formatShowtimeRange(startTimeString, movieLengthMinutes) {
         const startMinutes = toMinutes(startTimeString);
         const endMinutes = startMinutes + movieLengthMinutes;
@@ -61,6 +64,7 @@ window.addEventListener("load", () => {
             const timeButton = document.createElement("button");
 
             timeButton.type = "button";
+            // more readable format
             timeButton.innerText = formatShowtimeRange(timeString, movie.movieLength);
             timeButton.addEventListener("click", (clickEvent) => {
                 clickEvent.stopPropagation();
